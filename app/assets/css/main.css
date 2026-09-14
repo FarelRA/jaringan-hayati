@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-forest-50: #f0f9f4;
+  --color-forest-100: #dcf1e4;
+  --color-forest-200: #bce3cd;
+  --color-forest-300: #8ecfab;
+  --color-forest-400: #57b384;
+  --color-forest-500: #349768;
+  --color-forest-600: #247a53;
+  --color-forest-700: #1e6144;
+  --color-forest-800: #1b4d38;
+  --color-forest-900: #174030;
+  --color-forest-950: #0a241b;
+
+  --color-cream-50: #fdfcf7;
+  --color-cream-100: #faf7ee;
+  --color-cream-200: #f4efdd;
+  --color-cream-300: #e9e2c3;
+  --color-gold-400: #e8c46b;
+  --color-gold-500: #d9a83f;
+  --color-gold-600: #b98627;
+  --color-rose-leaf: #f2879b;
+  --color-sky-leaf: #8ab8f2;
+
+  --shadow-card: 0 18px 50px rgb(0 0 0 / 0.14);
+  --shadow-node: 0 8px 22px rgb(0 0 0 / 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream-50 text-forest-950 antialiased font-sans;
+}
+
+.dark body {
+  @apply bg-forest-950 text-forest-50;
+  background-image:
+    radial-gradient(1200px 700px at 85% -10%, rgb(87 179 132 / 0.08), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgb(232 196 107 / 0.06), transparent 55%);
+}
+
+/* ---------- typography helpers ---------- */
+.font-display { font-family: var(--font-display); }
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 text-[0.78rem] font-bold tracking-[0.16em] uppercase text-forest-600 mb-3;
+}
+.dark .eyebrow { @apply text-forest-400; }
+.eyebrow::before {
+  content: "";
+  @apply w-[26px] h-0.5 rounded bg-forest-600;
+}
+.dark .eyebrow::before { @apply bg-forest-400; }
+
+/* ---------- vue flow node cards (styled in TissueFlow.vue) ---------- */
+
+/* ---------- prose (esai & modal) ---------- */
+.prose-custom { @apply max-w-[74ch] text-[1.02rem] leading-[1.75]; }
+.prose-custom h3 { @apply font-display text-xl font-semibold mt-6 mb-2; }
+.prose-custom h4 { @apply font-display text-lg font-semibold mt-5 mb-1.5; }
+.prose-custom p { @apply my-3; }
+.prose-custom ul { @apply my-3 list-disc pl-6 space-y-1; }
+.prose-custom strong { @apply font-bold text-forest-800; }
+.dark .prose-custom strong { @apply text-forest-200; }
+.prose-custom figure { @apply my-6; }
+.prose-custom figcaption { @apply mt-2 text-[0.85rem] text-forest-700/70 dark:text-forest-300/70; }
+
+.dropcap > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  @apply float-left mr-3 mt-1 text-[3.4rem] font-bold leading-[0.82] text-forest-600;
+}
+.dark .dropcap > p:first-of-type::first-letter { @apply text-forest-400; }
+
+/* ---------- misc ---------- */
+.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { @apply rounded-full bg-forest-900/20 dark:bg-white/20; }
+
+.vue-flow__node { @apply cursor-pointer; }
+.vue-flow__handle { @apply opacity-0; }

@@ -1,0 +1,12 @@
+.git
+.gitattributes
+.gitignore
+node_modules
+.nuxt
+.output
+dist
+.env
+.env.*
+.vscode/
+*.md
+*.log
