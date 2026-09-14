@@ -4,6 +4,8 @@ import {
   useVueFlow,
   type Edge,
   type Node,
+  type NodeComponent,
+  type NodeMouseEvent,
   Position,
   MarkerType,
 } from "@vue-flow/core";
@@ -22,8 +24,10 @@ const { open } = useTissueModal();
 const { fitView, onPaneReady } = useVueFlow();
 
 const ready = ref(false);
-const nodes = ref<Node[]>([]);
-const edges = ref<Edge[]>([]);
+// shallowRef sesuai rekomendasi vue-flow: node/edge selalu diganti sebagai array baru,
+// bukan dimutasi di tempat (juga menghindari instansiasi tipe UnwrapRef yang terlalu dalam).
+const nodes = shallowRef<Node[]>([]);
+const edges = shallowRef<Edge[]>([]);
 
 interface Size { w: number; h: number }
 const FALLBACK: Size = { w: 172, h: 140 };
@@ -55,7 +59,7 @@ function initGraph() {
       data: n,
     }));
     edges.value = Object.keys(NODES).flatMap((id) =>
-      (NODES[id].children ?? []).filter((c) => NODES[c]).map((c) => ({
+      (NODES[id]?.children ?? []).filter((c) => NODES[c]).map((c) => ({
         id: `${id}->${c}`,
         source: id,
         target: c,
@@ -207,7 +211,7 @@ onMounted(() => {
   );
 });
 
-function onNodeClick(_e: unknown, node: Node) {
+function onNodeClick({ node }: NodeMouseEvent) {
   open(node.data as FlowNodeData);
 }
 
@@ -215,6 +219,10 @@ const minimapNodeColor = (n: Node) => {
   const b = (n.data as FlowNodeData).branch;
   return b === "plant" ? "#349768" : b === "animal" ? "#f2879b" : "#e8c46b";
 };
+
+// TissueNode hanya mendeklarasikan prop `data`; prop NodeProps lainnya
+// diteruskan otomatis sebagai attrs oleh vue-flow.
+const nodeTypes = { tissue: TissueNodeVue as unknown as NodeComponent };
 </script>
 
 <template>
@@ -222,7 +230,7 @@ const minimapNodeColor = (n: Node) => {
     <VueFlow
       v-model:nodes="nodes"
       v-model:edges="edges"
-      :node-types="{ tissue: TissueNodeVue }"
+      :node-types="nodeTypes"
       :min-zoom="0.15"
       :max-zoom="2.5"
       :nodes-connectable="false"

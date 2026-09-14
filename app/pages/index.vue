@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { NODES } from "~/data/tissues";
+import { NODES, type TissueNode } from "~/data/tissues";
 import { iconFor } from "~/utils/icons";
+
+// Data statik: id-id berikut dijamin ada pada NODES.
+const heroNode = NODES.tumbuhan as TissueNode;
+const previewNodes = (["meristem", "xilem", "saraf"] as const).map(
+  (id) => NODES[id] as TissueNode,
+);
 
 const gateways = [
   { to: "/mindmap", icon: "network", title: "Mind Map", desc: "Jelajahi seluruh jaringan dalam satu graf yang saling terhubung, lengkap dengan gambar mikroskopis." },
@@ -43,7 +49,7 @@ useSeoMeta({
 
       <div class="relative hidden lg:block">
         <img
-          :src="NODES.tumbuhan.img"
+          :src="heroNode.img"
           alt="Penampang daun dari mikroskop cahaya, Wikimedia Commons"
           class="aspect-[4/3.2] w-full rounded-[26px] border border-forest-900/10 object-cover shadow-[var(--shadow-card)] dark:border-white/10"
           referrerpolicy="no-referrer"
@@ -75,23 +81,23 @@ useSeoMeta({
       <h2 class="font-display text-3xl font-semibold tracking-tight">Contoh node dari mind map</h2>
       <div class="mt-6 grid gap-6 md:grid-cols-3">
         <article
-          v-for="id in ['meristem', 'xilem', 'saraf'] as const"
-          :key="id"
+          v-for="n in previewNodes"
+          :key="n.id"
           class="group overflow-hidden rounded-3xl border border-forest-900/10 bg-white shadow-[var(--shadow-card)] dark:border-white/10 dark:bg-forest-900"
         >
           <img
-            :src="NODES[id].img"
-            :alt="NODES[id].imgCap ?? NODES[id].title"
+            :src="n.img"
+            :alt="n.imgCap ?? n.title"
             class="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
             referrerpolicy="no-referrer"
           >
           <div class="p-6">
             <h3 class="flex items-center gap-2 font-display text-xl font-semibold">
-              <component :is="iconFor(NODES[id].icon)" class="h-5 w-5 text-forest-600 dark:text-forest-400" aria-hidden="true" />
-              {{ NODES[id].title }}
+              <component :is="iconFor(n.icon)" class="h-5 w-5 text-forest-600 dark:text-forest-400" aria-hidden="true" />
+              {{ n.title }}
             </h3>
             <p class="mt-2 line-clamp-3 text-[0.93rem] text-forest-800/70 dark:text-forest-100/65">
-              {{ NODES[id].short }}
+              {{ n.short }}
             </p>
           </div>
         </article>

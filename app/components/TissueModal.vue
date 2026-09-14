@@ -12,7 +12,10 @@ import { iconFor } from "~/utils/icons";
 const { selected: n, isOpen, close, open } = useTissueModal();
 
 const children = computed(() =>
-  (n.value?.children ?? []).filter((c) => NODES[c]).map((c) => NODES[c]),
+  (n.value?.children ?? []).flatMap((c) => {
+    const node = NODES[c];
+    return node ? [node] : [];
+  }),
 );
 
 const category = computed(() => {
